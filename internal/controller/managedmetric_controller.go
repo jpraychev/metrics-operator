@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 	"time"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -308,7 +309,12 @@ func getClusterInfo(config *rest.Config) (string, error) {
 		return "localhost", nil
 	}
 
-	return hostname, nil
+	// Remove any prefix (like "kubernetes" or "kubernetes.default.svc")
+	parts := strings.Split(hostname, ".")
+	clusterName := parts[0]
+
+	return clusterName, nil
+
 }
 
 // OrchestratorFactory is a function type for creating orchestrators
